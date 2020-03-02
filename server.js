@@ -86,9 +86,9 @@ app.get('/users/current', (req, res) => {
 
 
 // Start defining your routes here
-// app.get('/', (req, res) => {
-//   res.send('Hello world')
-// })
+app.get('/', (req, res) => {
+  res.send('Hello world')
+})
 
 // Start the server
 app.listen(port, () => {
