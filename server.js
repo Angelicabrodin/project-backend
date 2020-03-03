@@ -84,11 +84,12 @@ app.post('/login', async (req, res) => {
 
 app.get('/user', authenticateUser)
 // The async here is from vans auth code
-app.get('/user', async (req, res) => {
+app.get('/user', (req, res) => {
   // This will only happen if the next() function is called from the middleware
   // Now we can access the user.. 
-  res.json(req.user)
-  res.send('Welcome')
+  // res.json(req.user)
+  res.json({ secret: 'This is a super secret message.' })
+  // res.send('Welcome')
 })
 
 
