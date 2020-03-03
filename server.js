@@ -48,9 +48,8 @@ const authenticateUser = async (req, res, next) => {
   } else {
     res.status(401).json({ loggedOut: true, message: 'Please try logging in again' })
   }
-} catch (err) {
-  res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
-}
+  // } catch (err) {
+  //   res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
 }
 
 // Do I want to name it Users here or what should I use, depending on the route I am going to use in the StartPage??
