@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt-nodejs'
 import crypto from 'crypto'
 
+
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/yogaApp"
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.Promise = Promise
@@ -12,7 +13,6 @@ mongoose.Promise = Promise
 const User = mongoose.model('User', {
   name: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 25
   },
@@ -25,7 +25,7 @@ const User = mongoose.model('User', {
     type: String,
     required: true
   },
-  accesstoken: {
+  accessToken: {
     type: String,
     default: () => crypto.randomBytes(128).toString('hex')
   }
@@ -55,7 +55,7 @@ const authenticateUser = async (req, res, next) => {
 
 // Do I want to name it Users here or what should I use, depending on the route I am going to use in the StartPage??
 
-app.post('/users', async (req, res) => {
+app.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body
     const user = new User({ name, email, password: bcrypt.hashSync(password) })
@@ -68,11 +68,15 @@ app.post('/users', async (req, res) => {
 
 // The same here, what will I call the endpoint??
 
-app.post('/sessions', async (req, res) => {
+app.post('/login', async (req, res) => {
   const user = await User.findOne({ email: req.body.email })
   if (user && bcrypt.compareSync(req.body.password, user.password)) {
+    // Success
     res.json({ userId: user._id, accessToken: user.accessToken })
   } else {
+    // Failure
+    // a. user does not exist
+    // b. encrypted password does not match
     res.json({ notFound: true })
   }
 })
