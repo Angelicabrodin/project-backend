@@ -40,17 +40,23 @@ app.use(bodyParser.json())
 
 
 const authenticateUser = async (req, res, next) => {
-  // try {
-  const user = await User.findOne({ accessToken: req.header('Authorization') })
-  if (user) {
-    req.user = user
-    next()
-  } else {
-    res.status(401).json({ loggedOut: true, message: 'Please try logging in again' })
+  try {
+    const user = await User.findOne({ accessToken: req.header('Authorization') })
+    if (user) {
+      req.user = user
+      next()
+    } else {
+      res.status(401).json({ loggedOut: true, message: 'Please try logging in again' })
+    }
+  } catch (err) {
+    res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
   }
-  // } catch (err) {
-  //   res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
 }
+
+// Start defining your routes here
+app.get('/', (req, res) => {
+  res.send('Hello world')
+})
 
 // Do I want to name it Users here or what should I use, depending on the route I am going to use in the StartPage??
 
@@ -61,7 +67,7 @@ app.post('/register', async (req, res) => {
     user.save()
     res.status(201).json({ id: user._id, accessToken: user.accessToken })
   } catch (err) {
-    res.status(400).json({ message: "Could not create user", errors: err.errors })
+    res.status(400).json({ message: "Could not register user", errors: err.errors })
   }
 })
 
@@ -88,14 +94,8 @@ app.get('/user', (req, res) => {
   // This will only happen if the next() function is called from the middleware
   // Now we can access the user.. 
   // res.json(req.user)
-  res.json({ secret: 'This is a super secret message.' })
+  res.send({ secret: 'This is a super secret message.' })
   // res.send('Welcome')
-})
-
-
-// Start defining your routes here
-app.get('/', (req, res) => {
-  res.send('Hello world')
 })
 
 // Start the server
