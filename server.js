@@ -40,17 +40,17 @@ app.use(bodyParser.json())
 
 
 const authenticateUser = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ accessToken: req.header('Authorization') })
-    if (user) {
-      req.user = user
-      next()
-    } else {
-      res.status(401).json({ loggedOut: true, message: 'Please try logging in again' })
-    }
-  } catch (err) {
-    res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
+  // try {
+  const user = await User.findOne({ accessToken: req.header('Authorization') })
+  if (user) {
+    req.user = user
+    next()
+  } else {
+    res.status(401).json({ loggedOut: true, message: 'Please try logging in again' })
   }
+} catch (err) {
+  res.status(403).json({ message: 'Access token is missing or wrong', error: err.errors })
+}
 }
 
 // Do I want to name it Users here or what should I use, depending on the route I am going to use in the StartPage??
@@ -83,9 +83,13 @@ app.post('/login', async (req, res) => {
 
 // the same here, I need to decide what to name my endpoints??
 
-app.get('/users/current', authenticateUser)
-app.get('/users/current', (req, res) => {
+app.get('/user', authenticateUser)
+// The async here is from vans auth code
+app.get('/user', async (req, res) => {
+  // This will only happen if the next() function is called from the middleware
+  // Now we can access the user.. 
   res.json(req.user)
+  res.send('Welcome')
 })
 
 
