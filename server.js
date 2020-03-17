@@ -93,8 +93,8 @@ app.get('/user', authenticateUser)
 app.get('/user', (req, res) => {
   // This will only happen if the next() function is called from the middleware
   // Now we can access the user.. 
-  // res.json(req.user)
-  res.send({ secret: 'This is a super secret message.' })
+  res.json(req.user)
+  // res.send({ secret: 'This is a super secret message.' })
   // res.send('Welcome')
 })
 
